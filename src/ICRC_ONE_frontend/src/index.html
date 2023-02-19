@@ -1,24 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>ICRC_ONE</title>
-    <base href="/" />
-    <link rel="icon" href="favicon.ico" />
-    <link type="text/css" rel="stylesheet" href="main.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment App</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <main>
-      <img src="logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#">
-        <label for="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
+  <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-auto">
+      <h1 class="text-2xl font-bold mb-4 text-center">Send Payment</h1>
+      <form class="space-y-4">
+        <div>
+          <label class="block mb-2" for="amount">Amount (ICPT)</label>
+          <input class="block w-full px-4 py-2 mb-4 leading-tight border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Enter amount" id="amount">
+        </div>
+        <div>
+          <label class="block mb-2" for="payee">Payee</label>
+          <input class="block w-full px-4 py-2 mb-4 leading-tight border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Enter payee" id="payee">
+        </div>
+        <div>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded button">Send Payment</button>
+        </div>
       </form>
-      <section id="greeting"></section>
-    </main>
+    </div>
+
+    <script type="module">
+      import { ICRC_ONE_backend } from "../../declarations/ICRC_ONE_backend";
+
+      const amountInput = document.getElementById('amount') as HTMLInputElement;
+      const payeeInput = document.getElementById('payee') as HTMLInputElement;
+
+      const sendPaymentButton = document.querySelector('button') as HTMLButtonElement;
+      sendPaymentButton.addEventListener('click', () => {
+        sendPayment(amountInput.value, payeeInput.value);
+      });
+
+
+      async function sendPayment(amount: string, payee: string): Promise<void> {
+        const canisterId = '<COLOQUE AQUI O ID DO CANISTER>';
+
+        const payment: Payment = {
+          amount: BigInt(amount),
+          payee: payee,
+        };
+
+        try {
+          const result = await window.ic.plug.send(
+            canisterId,
+            'process_payment',
+            payment
+          );
+          console.log(result);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    </script>
   </body>
 </html>

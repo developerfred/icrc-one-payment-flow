@@ -1,0 +1,9 @@
+This code is an example of a simple smart contract in Rust for a payment application. It uses the IC SDK to interact with the IC ecosystem and the Candid library to specify the contract's external calling interface. The contract supports a single function, process_payment, which accepts a payment of an amount in ICPT (Internet Computer Tokens) and a wallet address where the payment is to be sent.
+
+The contract contains a Payment structure that defines the amount of ICPT and the payment recipient's wallet address. The contract has a payment limit of 100 ICPT, which is checked in the process_payment function and returns an error if the payment exceeds this limit.
+
+The process_payment function verifies that the sender has enough balance to make the payment and then transfers the ICPT to the specified wallet address. The function is safe for concurrent calls, as it uses the asynchronous call_with_payment call to transfer the funds to the recipient, and this ensures that the contract remains in the function until the transfer completes.
+
+The #[cfg(test)] section of the code contains some unit tests for the process_payment function. Each test creates a payment with a certain amount in ICPT and a wallet address, and then calls the process_payment function with that payment. Tests verify that the function returns the expected result, be it a success or a specific error message.
+
+Testing ensures that the contract works as expected and that limit and insufficient balance restrictions are applied correctly. The use of automated tests is critical to ensuring the quality and security of contract code.
